@@ -1,0 +1,127 @@
+<!-- Cheetah Model
+
+    The state space is populated with joints in the order that they are
+    defined in this file. The actuators also operate on joints.
+
+    State-Space (name/joint/parameter):
+        - rootx     slider      position (m)
+        - rootz     slider      position (m)
+        - rooty     hinge       angle (rad)
+        - blthigh    hinge       angle (rad)
+        - bshin     hinge       angle (rad)
+        - bfoot     hinge       angle (rad)
+        - flthigh    hinge       angle (rad)
+        - flshin     hinge       angle (rad)
+        - flfoot     hinge       angle (rad)
+        - rootx     slider      velocity (m/s)
+        - rootz     slider      velocity (m/s)
+        - rooty     hinge       angular velocity (rad/s)
+        - blthigh    hinge       angular velocity (rad/s)
+        - blshin     hinge       angular velocity (rad/s)
+        - blfoot     hinge       angular velocity (rad/s)
+        - flthigh    hinge       angular velocity (rad/s)
+        - flshin     hinge       angular velocity (rad/s)
+        - flfoot     hinge       angular velocity (rad/s)
+
+    Actuators (name/actuator/parameter):
+        - blthigh    hinge       torque (N m)
+        - blshin     hinge       torque (N m)
+        - blfoot     hinge       torque (N m)
+        - flthigh    hinge       torque (N m)
+        - flshin     hinge       torque (N m)
+        - flfoot     hinge       torque (N m)
+
+-->
+<mujoco model="mit_mini_cheetah">
+    <compiler angle="degree" coordinate="local" inertiafromgeom="true" settotalmass="14"/>
+    <default>
+        <joint armature=".1" damping="0.0" limited="true" solimplimit="0 .8 .03" solreflimit=".02 1" stiffness="0"/>
+        <geom conaffinity="0" condim="3" contype="1" friction=".9 .1 .1" rgba="0.8 0.6 .4 1" solimp="0.0 0.8 0.01"
+              solref="0.02 1"/>
+        <motor ctrllimited="true" ctrlrange="-1 1"/>
+    </default>
+    <size nstack="300000" nuser_geom="1"/>
+    <option gravity="0 0 -9.81" timestep="0.002"/>
+    <asset>
+        <texture builtin="gradient" height="100" rgb1="1 1 1" rgb2="0 0 0" type="skybox" width="100"/>
+        <texture builtin="flat" height="1278" mark="cross" markrgb="1 1 1" name="texgeom" random="0.01"
+                 rgb1="0.8 0.6 0.4" rgb2="0.8 0.6 0.4" type="cube" width="127"/>
+        <texture builtin="checker" height="100" name="texplane" rgb1="0 0 0" rgb2="0.8 0.8 0.8" type="2d" width="100"/>
+        <material name="MatPlane" reflectance="0.5" shininess="1" specular="1" texrepeat="60 60" texture="texplane"/>
+        <material name="geom" texture="texgeom" texuniform="true"/>
+    </asset>
+    <worldbody>
+        <light cutoff="100" diffuse="1 1 1" dir="-0 0 -1.3" directional="true" exponent="1" pos="0 0 1.3"
+               specular=".1 .1 .1"/>
+        <geom conaffinity="1" condim="3" material="MatPlane" name="floor" pos="0 0 0" rgba="0.8 0.9 0.8 1"
+              size="60 60 60" type="plane"/>
+        <body name="torso" pos="0 0 0.4">
+            <camera name="track" mode="trackcom" pos="0 -3 0.3" xyaxes="1 0 0 0 0 1"/>
+            <joint armature="0" axis="1 0 0" damping="0" limited="false" name="rootx" pos="0 0 0" stiffness="0"
+                   type="slide"/>
+            <joint armature="0" axis="0 0 1" damping="0" limited="false" name="rootz" pos="0 0 0" stiffness="0"
+                   type="slide"/>
+            <joint armature="0" axis="0 1 0" damping="0" limited="false" name="rooty" pos="0 0 0" stiffness="0"
+                   type="hinge"/>
+            <geom fromto="-0.3 0 0 0.3 0 0" name="torso" size="0.05" type="capsule"/>
+            <body name="flthigh" pos="0.3 0 0">
+                <joint axis="0 -1 0" damping="0.0" name="flthigh" pos="0 0 0" range="-35 125" stiffness="0"
+                       type="hinge"/>
+                <geom axisangle="0 -1 0 -45" name="flthigh" pos="-0.1 0 -0.1" rgba="0, 0.4470, 0.7410 1"
+                      size="0.03 0.1414" type="capsule"/>
+                <body name="flshin" pos="-0.2 0 -0.2">
+                    <joint axis="0 -1 0" damping="0.0" name="flshin" pos="0 0 0" range="-80 80" stiffness="0"
+                           type="hinge"/>
+                    <geom axisangle="0 -1 0 45" name="flshin" pos="0.1 0 -0.1" rgba="0.8500, 0.3250, 0.0980 1"
+                          size="0.03 0.1414" type="capsule"/>
+                </body>
+            </body>
+            <body name="blthigh" pos="-0.3 0 0">
+                <joint axis="0 -1 0" damping="0.0" name="blthigh" pos="0 0 0" range="-35 125" stiffness="0"
+                       type="hinge"/>
+                <geom axisangle="0 -1 0 -45" name="blthigh" pos="-0.1 0 -0.1" rgba="0, 0.4470, 0.7410 1"
+                      size="0.03 0.1414" type="capsule"/>
+                <body name="blshin" pos="-0.2 0 -0.2">
+                    <joint axis="0 -1 0" damping="0.0" name="blshin" pos="0 0 0" range="-80 80" stiffness="0"
+                           type="hinge"/>
+                    <geom axisangle="0 -1 0 45" name="blshin" pos="0.1 0 -0.1" rgba="0.8500, 0.3250, 0.0980 1"
+                          size="0.03 0.1414" type="capsule"/>
+                </body>
+            </body>
+            <body name="frthigh" pos="0.3 0 0">
+                <joint axis="0 -1 0" damping="0.0" name="frthigh" pos="0 0 0" range="-35 125" stiffness="0"
+                       type="hinge"/>
+                <geom axisangle="0 -1 0 -45" name="frthigh" pos="-0.1 0 -0.1" rgba="0.4940, 0.1840, 0.5560 1"
+                      size="0.03 0.1414" type="capsule"/>
+                <body name="frshin" pos="-0.2 0 -0.2">
+                    <joint axis="0 -1 0" damping="0.0" name="frshin" pos="0 0 0" range="-80 80" stiffness="0"
+                           type="hinge"/>
+                    <geom axisangle="0 -1 0 45" name="frshin" pos="0.1 0 -0.1" rgba="0.4660, 0.6740, 0.1880 1"
+                          size="0.03 0.1414" type="capsule"/>
+                </body>
+            </body>
+            <body name="brthigh" pos="-0.3 0 0">
+                <joint axis="0 -1 0" damping="0.0" name="brthigh" pos="0 0 0" range="-35 125" stiffness="0"
+                       type="hinge"/>
+                <geom axisangle="0 -1 0 -45" name="brthigh" pos="-0.1 0 -0.1" rgba="0.4940, 0.1840, 0.5560 1"
+                      size="0.03 0.1414" type="capsule"/>
+                <body name="brshin" pos="-0.2 0 -0.2">
+                    <joint axis="0 -1 0" damping="0.0" name="brshin" pos="0 0 0" range="-80 80" stiffness="0"
+                           type="hinge"/>
+                    <geom axisangle="0 -1 0 45" name="brshin" pos="0.1 0 -0.1" rgba="0.4660, 0.6740, 0.1880 1"
+                          size="0.03 0.1414" type="capsule"/>
+                </body>
+            </body>
+        </body>
+    </worldbody>
+    <actuator>
+        <motor gear="100" joint="flthigh" name="flthigh"/>
+        <motor gear="100" joint="flshin" name="flshin"/>
+        <motor gear="100" joint="blthigh" name="blthigh"/>
+        <motor gear="100" joint="blshin" name="blshin"/>
+        <motor gear="100" joint="frthigh" name="frthigh"/>
+        <motor gear="100" joint="frshin" name="frshin"/>
+        <motor gear="100" joint="brthigh" name="brthigh"/>
+        <motor gear="100" joint="brshin" name="brshin"/>
+    </actuator>
+</mujoco>
